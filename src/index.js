@@ -8,10 +8,11 @@ app.get('/', (reg, res) => res.send("Hello World"))
 const typeDefs = gql`
     type Query{
         hello: String
-        notes: [Notes]
+        notes: [Note]
+        note(id: ID!): Note!
     }
 
-    type Notes{
+    type Note{
         id: ID!
         content: String!
         author: String!
@@ -21,7 +22,10 @@ const typeDefs = gql`
 const resolvers = {
     Query:{
         hello: () => "Hello world",
-        notes: () => notes
+        notes: () => notes,
+        note: (parent, args) => {
+           return notes.find(note => note.id === args.id) 
+        } 
     }
 }
 
