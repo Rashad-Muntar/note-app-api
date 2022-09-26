@@ -1,6 +1,7 @@
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
 const { GraphQLDateTime } = require("graphql-iso-date");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 //local models
@@ -11,12 +12,24 @@ const typeDefs = require("./schema");
 
 const app = express();
 
+const getUser = token => {
+  if(token) {
+    try {
+      return jwt.verify(token, process.env.JWT_SECRETE);
+    } catch (err) {
+      throw new Error("Session is invalid");
+    }
+  }
+};
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   DateTime: GraphQLDateTime,
-  context: () => {
-    return { models };
+  context: ({ req }) => {
+    const token = req.headers.authorization;
+    const user = getUser(token);
+    return { models, user };
   },
 });
 
@@ -32,8 +45,3 @@ app.listen(port, () =>
   console.log(`listening to port ${port}/${server.graphqlPath}`)
 );
 
-// menu for navigation
-// panels for top buttons area
-// background image
-
-// creating a form on an exiting form 54 minutes
