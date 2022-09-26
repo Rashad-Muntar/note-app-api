@@ -82,5 +82,42 @@ module.exports = {
         if(!valid) throw new AuthenticationError("Password does not match")
         return jwt.sign({user: user._id}, process.env.JWT_SECRETE)
    
+  },
+
+  toggleFavorite: async (parent, {id}, {models, user}) => {
+    if(!user) throw new AuthenticationError()
+    let noteCheck =  await models.Note.findById(id)
+    const hasUser  =  noteCheck.favoriteBy.indexOf(user.id)
+    if(hasUser >= 0){
+      return await models.Note.findByIdAndUpdate(
+        id,
+        {
+          $pull:{
+            favoriteBy: mongoose.Types.ObjectId(user.id)
+          },
+          $inc:{
+            favoriteCount: -1
+          }
+        },
+        {
+          new: true
+        }
+      )
+    }else{
+      return await models.Note.findByIdAndUpdate(
+        id,
+        {
+          $push:{
+            favoriteBy: mongoose.Types.ObjectId(user.id)
+          },
+          $inc:{
+            favoriteCount: 1
+          }
+        },
+        {
+          new: true
+        }
+      )
+    }
   }
 };
