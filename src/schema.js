@@ -28,6 +28,9 @@ module.exports = gql`
     user(username: String!): User
     users: [User!]!
     currentUser: User!
+    author: User!
+    favoriteBy: User!
+    favorite: [Note!]
   }
 
   type Mutation {
