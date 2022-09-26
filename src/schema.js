@@ -16,12 +16,15 @@ module.exports = gql`
     username: String!
     email: String!
     avatar: String
-    notes: [Note!]!
+    notes: [Note!]
   }
 
   type Query {
     notes: [Note]
     note(id: ID!): Note!
+    users: [User!]
+    user(username: String!): User!
+    me: User!
   }
 
   type Mutation {

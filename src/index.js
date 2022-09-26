@@ -29,7 +29,6 @@ const server = new ApolloServer({
   context: ({ req }) => {
     const token = req.headers.authorization;
     const user = getUser(token);
-    console.log(user);
     return { models, user };
   },
 });
@@ -46,8 +45,3 @@ app.listen(port, () =>
   console.log(`listening to port ${port}/${server.graphqlPath}`)
 );
 
-// menu for navigation
-// panels for top buttons area
-// background image
-
-// creating a form on an exiting form 54 minutes
